@@ -47,7 +47,7 @@ class TreeStructure {
 		$strSQLQuery = 	'SELECT terms.term_id AS ID, name, slug, description, parent AS parent_id FROM ' . $wpdb->terms . ' AS terms ' .
 						'LEFT JOIN ' .$wpdb->term_taxonomy. ' AS taxonomies ' .
 						'ON terms.term_id = taxonomies.term_id ' .
-						'WHERE taxonomies.parent = ' . (int) $root_id;
+						'WHERE taxonomies.parent = ' . intval( $root_id );
 		
 		/*
 		$sql = 'SELECT id as node_id, name FROM '
@@ -105,7 +105,7 @@ class TreeStructure {
 		$strSQLQuery = 	'SELECT terms.term_id AS ID, name, slug, description, parent AS parent_id FROM ' . $wpdb->terms . ' AS terms ' .
 						'LEFT JOIN ' .$wpdb->term_taxonomy. ' AS taxonomies ' .
 						'ON terms.term_id = taxonomies.term_id ' .
-						'WHERE taxonomies.parent = ' . (int) $child_node_id;
+						'WHERE taxonomies.parent = ' . intval( $child_node_id );
 
 
 		//$child_results = DbAccess::getInstance()->query($sql);
@@ -306,9 +306,9 @@ class MultipleCategoryFilter {
 		switch($_POST['action']) {
 			case 'refresh':
 			case 'refresh_category_tree':
-				$msg = array('type' => 'error', 'message' => 'Fehler: Kein(e) Widget(s) ausgewählt.' );
+				$msg = array('type' => 'error', 'message' => __('Error: No widget(s) selected.', 'mcf_widget') );
 				
-				echo '<h2>Parsing Category Trees:</h2>'; flush();
+				echo '<h2>' . __('Parsing Category Trees:', 'mcf_widget') . '</h2>'; flush();
 				
 				foreach($arrWidgets as $iWidgetID => $iWidgetItem) {
 				
@@ -326,8 +326,11 @@ class MultipleCategoryFilter {
 				$bUpdateResult = update_option( 'widget_' . $this->widgetIdentifier, $arrWidgets);
 				
 				if($bUpdateResult != false) {
+					$iUpdatedWidgetTrees = sizeof($arrWidgets);
+					
 					$msg = array(
-						'type' => 'updated', 'message' => (sizeof($arrWidgets) > 1 ? sizeof($arrWidgets) . ' Widget-Kategoriebäume' : 'Widget-Kategoriebaum') .' aktualisiert.'
+						'type' => 'updated', 
+						'message' => sprintf( _n('Updated one widget category tree', 'Updated %s widget category trees', $iUpdatedWidgetTrees, 'mcf_widget' ), $iUpdatedWidgetTrees ),
 					);
 				} else {
 					$msg = array('message' => __("Error: Could not update widget settings. Either the category trees didn't change (needless refresh) or an unknown error occured while writing the settings into the database.", 'mcf_widget');
@@ -449,10 +452,10 @@ class _ui_MultipleCategoryFilterWidget extends WP_Widget {
 	function __construct() {
 		$strIdentifier = '_ui_MultipleCategoryFilterWidget';
 		
-		$widget_ops = array( 'description' => 'Custom widget to display articles filtered by a specific single or related parent category.' );
+		$widget_ops = array( 'description' => __('Custom widget to display articles filtered by a specific single or related parent category.', 'mcf_widget') );
 		$control_ops = array('width' => 400);
 		
-		parent::__construct( $strIdentifier, __('Multi-Kategorie-Artikelfilter'), $widget_ops, $control_ops );
+		parent::__construct( $strIdentifier, __('Multiple Category Posts Filter', 'mcf_widget'), $widget_ops, $control_ops );
 		$this->strIdentifier = $strIdentifier;
 	}
 	
