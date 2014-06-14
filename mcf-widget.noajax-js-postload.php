@@ -2,10 +2,11 @@
 /**
 Plugin Name: MFC No AJAX Postload Widget
 Plugin URI: https://github.com/ginsterbusch/multiple-category-filter-thingy
-Description: Custom widget to display articles filtered by a specific single or related parent category. This version does NOT use ajax, instead all the data is being inserted directly from start. Also JS data is all being load / processed seperatedly.
+Description: Custom widget to display articles filtered by a specific single or related parent category. This version does NOT use ajax, instead all the data is being inserted directly from start. Also JS data is all being load / processed seperatedly. 
 Author: Fabian Wolf
 Version: 0.8.1
 Author URI: http://usability-idealist.de/
+License: GPL v2
 */
 
 // init
@@ -167,21 +168,21 @@ class MultipleCategoryFilter {
 		define('MCF_PREFIX', $this->pluginPrefix);
 	
 		// init for redirection
-		add_action('get_header', array(&$this, 'redirect_category_selection') );
+		add_action('get_header', array( $this, 'redirect_category_selection') );
 		
 		// register widget
-		add_action( 'widgets_init', array(&$this, 'init_widget' ) );
+		add_action( 'widgets_init', array( $this, 'init_widget' ) );
 		
 		// scripting stuff
 		
-		add_action('wp_enqueue_scripts', array(&$this, 'init_frontend_js' ) );	
+		add_action('wp_enqueue_scripts', array($this, 'init_frontend_js' ) );	
 		
 		/**
 		 * NOTE: Fixes the misbehaviour of is_admin() - is_admin() also returns true if its being called in admin-ajax, although the file is being used for frontend ajax as well. Of corpse, we don't want exposure of admin-only stuff to the rest of the world, would we? ;)
 		 */
 		if(is_admin() && basename(__FILE__, '.php') != 'admin-ajax' ) {
-			add_action('admin_menu', array(&$this, 'add_admin_pages') );
-			//add_action('admin_enqueue_scripts', array(&$this, 'init_admin_js') );
+			add_action('admin_menu', array($this, 'add_admin_pages') );
+			//add_action('admin_enqueue_scripts', array($this, 'init_admin_js') );
 		}
 	
 	}
@@ -290,7 +291,7 @@ class MultipleCategoryFilter {
 	}
 	
 	public function add_admin_pages() {
-		add_theme_page( $this->pluginName, $this->pluginName, 'manage_options', $this->pluginPrefix . 'admin', array(&$this, 'admin_page' ));
+		add_theme_page( $this->pluginName, $this->pluginName, 'manage_options', $this->pluginPrefix . 'admin', array($this, 'admin_page' ));
 	}
 	
 	
